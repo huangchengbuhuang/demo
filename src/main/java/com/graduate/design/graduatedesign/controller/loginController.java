@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class hellocontroller {
+    @RequestMapping("/login")
+    @ResponseBody
 
     public String hello(){
         return "hello";

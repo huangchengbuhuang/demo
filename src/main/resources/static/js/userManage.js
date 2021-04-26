@@ -4,8 +4,8 @@ var canvas;
 var base64;//将canvas压缩为base64格式
 var mapObj, cluster;
 var markers = [];
-//var userId = '4657c0733c5048a79e7555574a1dc564';
-var userId = getCookie("userId");
+var userId = '4657c0733c5048a79e7555574a1dc564';
+
 if(userId){
     $('.logined').css('display','inline-block');
     $('.unlogin').css('display','none');
