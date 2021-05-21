@@ -14,7 +14,6 @@
     <!-- 此页面样式-->
     <link href="../css/userHelp.css" rel="stylesheet">
     <style>
-
         .tab{
             width:100%;
             height:800px;
@@ -124,14 +123,14 @@
                     <td>10-40</td>
                     <td class="qqs"></td>
                     <td class="a"></td>
-                    <td><a href="hardwaresShow.html" target="_blank">查看更多</a>|<a class="del">删除</a></td>
+                    <td><a href="ViewMore.html" target="_blank">查看更多</a>|<a class="del">删除</a></td>
                 </tr>
                 <tr height='35'>
                     <td>光照传感器</td>
                     <td>0-500</td>
                     <td class="qqs"></td>
                     <td class="a"></td>
-                    <td><a href="hardwaresShow.html" target="_blank">查看更多</a>|<a class="del">删除</a></td>
+                    <td><a href="ViewMore.html" target="_blank">查看更多</a>|<a class="del">删除</a></td>
                 </tr>
                 <tr height='35' bgcolor="#f2f2f2">
                     <td>风速传感器</td>
@@ -213,7 +212,7 @@
                 <tr height='35' bgcolor="#f2f2f2">
                     <td>mpu6050横滚角传感器</td>
                     <td>-1000-1000</td>
-                    <td class="qqs"></td>
+                    <td class="qqs">0</td>
                     <td class="a"></td>
                     <td><a href="hardwaresShow.html" target="_blank">查看更多</a>|<a class="del">删除</a></td>
                 </tr>
@@ -248,10 +247,99 @@
         $(this).removeClass("hover");
     });
 
+
+    setInterval(function(){
+
+        //最新数据：
+        var values=new Array();
+
+            values[0]=Math.ceil(Math.random()*40);
+            values[1]=Math.ceil(Math.random()*500);
+            values[2]=Math.ceil(Math.random()*100);
+            values[3]="南";
+            values[4]=Math.ceil(Math.random()*2);
+            values[5]="否";
+            values[6]=Math.ceil(Math.random()*3);
+            values[7]=Math.ceil(Math.random()*3);
+            values[8]=Math.ceil(Math.random()*100);
+            values[9]=Math.ceil(Math.random()*270000);
+            values[10]=Math.ceil(Math.random()*5000);
+            values[11]=Math.ceil(Math.random()*1000);
+            values[12]=Math.ceil(Math.random()*1000);
+            values[13]=Math.ceil(Math.random()*1000);
+            values[14]=Math.ceil(Math.random()*1000);
+        for(var i=0;i<15;i++){
+            $(".qqs")[i].innerHTML=values[i];
+        }
+
+        var date=new Date();
+        var year=date.getFullYear(); //获取当前年份   
+        var mon=date.getMonth()+1; //获取当前月份   
+        var da=date.getDate(); //获取当前日     
+        var h=date.getHours(); //获取小时   
+        var m=date.getMinutes(); //获取分钟   
+        var s=date.getSeconds(); //获取秒
+        var vv=document.getElementsByClassName("a");
+        for(var i=0;i<15;i++){
+            vv[i].innerHTML=year+'-'+mon+'-'+da+'  '+h+':'+m+':'+s;
+        }
+
+
+        $.post("/Sensor",function(json){
+            console.log(json)
+        }).fail(function(json){
+            alert("读取数据失败");
+        });
+        /*$.ajax({
+            type: "post",
+            url:"/Sensor",//这里需要添加数据
+            dataType: "json",
+
+           /!* success: function(res){
+                console.log(res);
+                if (res != null && res != "") {
+                      alert("此处已经执行111");
+                    var aa=[];
+                    /!*for(var i=0;i<res.length;i++){
+                        var nn=res[i].split("");
+                        var len=res[i].split("").length;
+                        for(var j=0;j<len;j++){
+                            if(res[i].split("")[j]==':'){
+                                var dd=nn.slice(j+1,len).join('');
+                                aa.push(dd);
+                                break;
+                            }
+                        }
+                         var date=new Date();
+            var year=date.getFullYear(); //获取当前年份   
+            var mon=date.getMonth()+1; //获取当前月份   
+            var da=date.getDate(); //获取当前日     
+            var h=date.getHours(); //获取小时   
+            var m=date.getMinutes(); //获取分钟   
+            var s=date.getSeconds(); //获取秒
+            var vv=document.getElementsByClassName("a");
+            for(var i=0;i<15;i++){
+                vv[i].innerHTML=year+'-'+mon+'-'+da+'  '+h+':'+m+':'+s;
+            }
+                    }*!/
+                    console.log(aa);
+                    for(var i=0;i<15;i++){
+                        $(".qqs")[i].innerHTML=aa[i];
+                    }
+
+
+                }
+
+            }
+        });*!/*/
+    },2000);
+
+
+   /* //轮询的方法
     setInterval(function(){
         $.ajax({
             type: "post",
-            url:"http://47.100.6.42/electric/get_data.php",
+            url:"/Sensor",
             dataType: "json",
             success: function(res){
                 if (res != null && res != "") {
@@ -272,9 +360,13 @@
                         $(".hhd")[i].innerHTML=aa[i];
                     }
                 }
+
             }
         });
     },6000);
+
+
+
     setInterval(function(){
         $.ajax({
             type: "post",
@@ -302,46 +394,10 @@
             }
         });
     },500);
-    setInterval(function(){
-        $.ajax({
-            type: "post",
-           url:"http://47.100.6.42/electric/get_data.php",
-            dataType: "json",
-            success: function(res){
-                if (res != null && res != "") {
-                    //   console.log(res);
-                    var aa=[];
-                    for(var i=0;i<res.length;i++){
-                        var nn=res[i].split("");
-                        var len=res[i].split("").length;
-                        for(var j=0;j<len;j++){
-                            if(res[i].split("")[j]==':'){
-                                var dd=nn.slice(j+1,len).join('');
-                                aa.push(dd);
-                                break;
-                            }
-                        }
-                    }
-                    console.log(aa);
-                    for(var i=0;i<15;i++){
-                        $(".qqs")[i].innerHTML=aa[i];
-                    }
 
-                    var date=new Date();
-                    var year=date.getFullYear(); //获取当前年份   
-                    var mon=date.getMonth()+1; //获取当前月份   
-                    var da=date.getDate(); //获取当前日     
-                    var h=date.getHours(); //获取小时   
-                    var m=date.getMinutes(); //获取分钟   
-                    var s=date.getSeconds(); //获取秒
-                    var vv=document.getElementsByClassName("a");
-                    for(var i=0;i<15;i++){
-                        vv[i].innerHTML=year+'-'+mon+'-'+da+'  '+h+':'+m+':'+s;
-                    }
-                }
-            }
-        });
-    },3000);
+
+
+
 
     $.ajax({
         type: "post",
@@ -368,7 +424,7 @@
             }
         }
     });
-
+*/
     var map=new BMap.Map("allmap");//创建Map实例
     map.centerAndZoom(new BMap.Point(113.404,36.915),12);//初始化地图
     var opts = {type: BMAP_NAVIGATION_CONTROL_SMALL};
@@ -451,7 +507,7 @@
                     var series = this.series[0];
                     setInterval(function () {
                         $.ajax({
-                            url: "http://47.100.6.42/electric/get_data.php",
+                            url:"", /*"http://47.100.6.42/electric/get_data.php",*/
                             type: 'post',
                             dataType: "json",
                             async: false,
@@ -567,6 +623,10 @@
             $('.container'+i).highcharts(json);
         }
     });
+
+
+
+
 </script>
 
 </body>

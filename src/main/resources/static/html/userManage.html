@@ -6,6 +6,7 @@
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script src="../js/highcharts.js" type="text/javascript" charset="utf-8"></script>
     <script src="../js/vue.js" type="text/javascript" charset="utf-8"></script>
+
     <link href="../css/init.css" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!--导航和底部样式-->
@@ -22,10 +23,12 @@
 
     <!-- 地理位置-->
     <script type="text/javascript"
+
             src="https://webapi.amap.com/maps?v=1.4.2&key=e58bae199679e49544969133bc20896e&plugin=AMap.DistrictSearch"></script>
     <script type="text/javascript" src="https://webapi.amap.com/demos/js/liteToolbar.js"></script>
-    <style>
 
+
+    <style>
         #map #mapShow {
             width: 100%;
             height: 530px;
@@ -273,6 +276,13 @@
 
     </style>
 </head>
+
+
+
+
+
+
+
 <body>
 <header>
     <nav class="header navbar navbar-fixed-top">
@@ -288,6 +298,7 @@
         </div>
     </nav>
 </header>
+
 <div class="container-fluid all">
     <div class="sidebar">
         <div class="manageDevices" >
@@ -326,8 +337,6 @@
                 <!-- 我的设备-->
                 <div role="tabpanel" class="tab-pane active" id="mydevices">
                     <div>
-
-
                         <!-- 我的设备 添加设备-->
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active" style="font-size: 14px;">
@@ -342,7 +351,7 @@
                             <!-- 设备列表-->
                             <div role="tabpanel" class="tab-pane active" id="deviceslist">
                                 <table id="table" cellpadding="0" cellspacing="0" class="table">
-                                    <thead>
+
                                     <tr class="thead">
                                         <td class="t30">设备ID</td>
                                         <td class="t30">名称</td>
@@ -350,12 +359,67 @@
                                         <td class="t20">简介</td>
                                         <td class="t40">操作</td>
                                     </tr>
-                                    </thead>
-                                    <tbody class="showDevicesList"></tbody>
+
+                               <!--class="showDevicesList"-->     <tbody  id="content" align="center"></tbody>
 
                                 </table>
                                 <!-- 分页-->
-                                        <iframe src="产品开发.html"></iframe>
+                                <!--次数暂时先放着-->
+                                    <!--    <iframe src="产品开发.html"></iframe>-->
+                                <SCRIPT>
+
+
+                                        var values={"id":65}
+                                        $.post("/Equipment", values,function(json){
+                                            console.log(json)
+                                            var html="";
+                                            for (var i=0;i<json.length;i++){
+
+                                                //将毫秒数转化为标准日期
+                                                var unixTimestamp = new Date( json[i].gmt_create ) ;
+                                                commonTime = unixTimestamp.toLocaleString();
+
+                                                //添加列表
+                                                html+="<tr>"+"<td>"+json[i].equ_id+"</td>"+
+                                                    "<td>"+json[i].equipment_name+"</td>"+
+                                                    "<td>"+commonTime+"</td>"+
+                                                    "<td>"+json[i].description+"</td>"+
+                                                    "<td>"+"<a class='area_id' id="+json[i].equ_id+">"+"删除"+"</a>"+"</td>"+//动态增加Id,id使用设备Id作为唯一主键
+                                                    "</tr>"
+
+                                            }
+                                            $("#content").html(html);
+
+                                        }).fail(function(json){
+                                            alert("获取数据失败，请稍后再试");
+                                        });
+                                        //点击删除进行删除操作
+                                        $(function() {
+                                            $(document).on("click",".area_id",function() {
+                                                var id = $(this).attr('id');
+                                                var con = confirm("确认删除其全部信息吗？");
+                                                if(con==true){
+                                                    //    从页面删除
+                                                    var params = {"equipmentId":id};
+                                                    $.post("/Equipment/del",params,function(data){
+                                                        if(data.toString() == 'COMMPN_SUC'){
+                                                            var url=window.location.href;
+                                                            alert(url);
+                                                            window.location.href = url;
+                                                        }else if(data.toString() == 'Equipment_DEL_ERROR'){
+                                                            alert("设备信息删除失败");
+                                                        }
+                                                    }).fail(function(){
+                                                        alert("请求错误，请稍后再试");
+                                                    });
+                                                }
+                                            })
+                                        })
+
+
+
+
+                                </SCRIPT>
                             </div>
 
                             <!-- 添加设备-->
@@ -374,9 +438,9 @@
                                             <tr class="tr1">
                                                 <td>上传图片</td>
                                                 <td>
-                                                    <!--<input type="file" id="uploadImg" name="imgUrl" value="" onchange="selectImg(this)" required/>-->
-                                                    <!--<img id="showImg" src=""/>-->
-                                                    <!--<button class="frontBtn">上传图片</button>-->
+                                                    <!--<input type="file" id="uploadImg" name="imgUrl" value="" onchange="selectImg(this)" required/>
+                                                    <img id="showImg" src=""/>
+                                                    <button class="frontBtn">上传图片</button>-->
                                                     <form>
                                                         <input type="file" class="front" name="image" multiple/>
                                                     </form>
@@ -419,6 +483,123 @@
                                             </tbody>
                                         </table>
                                     </form>
+                                    <script>
+                                        map = new AMap.Map('mapDiv', {
+                                            resizeEnable: true,
+                                            center: new AMap.LngLat(116.306206, 39.975468),
+                                            zoom:10
+                                        });
+                                        var districtSearch = new AMap.DistrictSearch();
+                                        districtSearch.search('中国',function(status, result){
+                                            var subDistricts = result.districtList[0].districtList;
+                                            var select = document.getElementById('subDistricts');
+                                            for(var i = 0;i < subDistricts.length; i += 1){
+                                                var name = subDistricts[i].name;
+                                                var option = document.createElement('option');
+                                                option.value = option.innerHTML = name;
+                                                select.appendChild(option);
+                                            }
+                                            select.onchange = function(){map.setCity(this.value)};
+                                            select.value = subDistricts[0].name;
+                                            select.onchange();
+                                        });
+                                        //导航条对视野做出变化
+                                        map.plugin(["AMap.ToolBar"], function () {
+                                            var toolBar = new AMap.ToolBar();
+                                            map.addControl(toolBar);
+                                        });
+                                        if(true){
+                                            pos = new AMap.LngLat(0, 0);
+                                            map.setZoom(12);
+                                        }
+                                        else
+                                        {// showCityInfo();
+                                        }
+                                        map.setCenter(pos);
+                                        addMarker();
+                                        var clickEventListener=AMap.event.addListener(map,'click',function(e){
+
+                                            var lng =e.lnglat.getLng();
+                                            var lat =e.lnglat.getLat();
+                                            addPoint(lng,lat);
+                                        });
+                                        mapObj = new AMap.Map("mapShow", {
+                                            //二维地图显示视口
+                                            view: new AMap.View2D({
+                                                center: new AMap.LngLat(104.451345, 37.284562),//地图中心点
+                                                zoom: 4 //地图显示的缩放级别
+                                            })
+                                        });
+                                        mapObj.plugin(["AMap.ToolBar"], function () {
+                                            var toolBar = new AMap.ToolBar();
+                                            mapObj.addControl(toolBar);
+                                        });
+                                        function addMarker() {
+                                            marker = new AMap.Marker({
+                                                position:pos,
+                                                draggable:false, //点标记可拖拽
+                                                cursor:'move',  //鼠标悬停点标记时的鼠标样式
+                                                raiseOnDrag:true//鼠标拖拽点标记时开启点标记离开地图的效果
+
+                                            });
+                                            marker.setMap(map);
+                                        }
+                                        //点添加到地图上//解决地图问题
+                                        function addPoint(lng,lat) {
+                                            var point =  new AMap.LngLat(lng, lat);  // 创建标注
+                                            marker.setPosition(point);            // 将标注添加到地图中
+                                            //$("#location").val(lng + "," + lat);
+
+                                            $("#location_X").val(lng);
+                                            $("#location_Y").val(lat);
+                                        }
+                                    </script>
+
+
+                                    <SCRIPT>
+                                        //保存新添加的设备信息
+                                        function saveDevice(){
+                                            alert("保存成功");
+
+                                             if($("#Name").val()){
+                                                 var params = $("#form1").serializeArray();
+
+                                                 console.log(params);
+                                                 var values={};
+                                                 $.each(params,function(i,val){
+                                                     values[val.name] = val.value;
+                                                 });
+                                                 values.imgUrl = "";
+                                                 values.userId = userId;
+                                                 console.log(values);
+                                                 $.post("/Equipment/add",values,function(json){
+                                                     console.log(json);
+
+
+                                                     if(json.toString() == 'COMMON_SUC'){
+                                                         alert("重新打开");
+                                                         window.open("userManage.html")
+                                                       /*  var url=window.location.href;
+                                                         window.location.href = url;*/
+                                                     }
+
+                                                 }).fail(function(){
+                                                     alert("请求错误，请稍后再试")
+                                                 });
+                                             }else{
+                                                 alert("请填写必要信息")
+                                             }
+
+                                        }
+                                    </SCRIPT>
+                                    <script>
+                                        function cancelAddDevice(){
+                                            document.getElementById('form1').reset();
+                                            var Rurl=window.location.href;
+                                            window.location.href = Rurl;
+                                        }
+                                    </script>
+
 
                                 </div>
 
@@ -427,16 +608,57 @@
                     </div>
 
                 </div>
+
+
+
+
+
+
+
+
+
                 <!-- 地图模式-->
                 <div role="tabpanel" class="tab-pane" id="mapmode">
                     <iframe src="map.html"></iframe>
                 </div>
+
+
+
+
                 <div role="tabpanel" class="tab-pane" id="realtimedata">
                     <!-- 各个设备实时数据-->
-                    <div id="realtimeDataList">
+                    <!--<div id="realtimeDataList">
                         <iframe src="deviceTable.html" scrolling="no"></iframe>
-                    </div>
+                    </div>-->
+                    <iframe src="deviceTable.html" scrolling="no"></iframe>
+                    <!--<iframe src="devicemanage.html" scrolling="no"></iframe>-->
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <!--统计分析-->
                 <div id="nav_right">
                     <div class="middle_shebeigailan" id="shebei">
@@ -495,6 +717,7 @@
                     $('#ditumoshi').on('click', function () {
                         $('#nav_right').hide();
                     })
+                    //此处想隐藏
                     $('#shishishuju').on('click', function () {
                         $('#nav_right').hide();
                     })
@@ -520,7 +743,7 @@
                     var chart = {
                         type: 'spline',
                         subtitle: {
-                            text: '网电云管家提供数据'
+                            text: '物联云平台提供数据'
                         },
                         animation: Highcharts.svg, // don't animate in IE < IE 10.
                         marginRight: 10,
@@ -648,7 +871,7 @@
                         text: '实时数据'
                     },
                     subtitle: {
-                        text: '网电云管家提供数据'
+                        text: '物联云平台提供数据'
                     },
                     yAxis: {
                         title: {
@@ -778,7 +1001,12 @@
     </div>
     <!--我是主要内容 end-->
 </div>
-</div>
+
+
+
+
+
+
 <a href="#top" id="goTop"><span class="glyphicon glyphicon-chevron-up"></span></a>
 <script src="../js/bootstrap.min.js"></script>
 <!--平滑滚动到顶部库-->
@@ -793,7 +1021,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.90/jsrender.js"></script>
 <!--jqPaginator jquery分页插件-->
 <script src="../js/jqPaginator.js"></script>
-<script src="../common.js"></script>
-<script src="../js/userManage.js"></script>
+<!--<script src="../common.js"></script>-->
+<script src="../js/userManage.js" ></script>
 </body>
 </html>

@@ -83,8 +83,8 @@
     <div class="image">
         <div class="son1"></div>
         <div class="son2">
-            <h2>STM32</h2>
-            <p>微处理器选用STM32F103，STM32F103使用高性能的ARMCortex-M3 32位内核，内部有高速存储器，有很多引脚，包括多个I/O引脚和12位ADC转换引脚，有三个通用的定时器和一个PWM定时器，还包括多种标准的通信接口</p>
+            <h2>温度传感器</h2>
+            <p>DHT11数字温湿度传感器，可以进行温度和湿度的检测，并且对输出的数字信号进行了校准。检测湿度部分是通过电阻式感湿元件来进行检测，温度是通过NTC 测温元件进行检测。由于两个元件和8位单片机连接，正因为如此该模块有着快速的响应、优秀的抗干扰能力、性价高等特点</p>
             <br>
         </div>
 
@@ -118,7 +118,7 @@
     var number1=getQueryStringArgs();
     var number=number1["id"];
     $(function () {
-        $.ajax({
+       /* $.ajax({
             url:"http://222.24.20.127:1233/ssm/sensorData_one?id="+number,
             type: 'post',
             dataType: "json",
@@ -133,7 +133,7 @@
                 $(".son1").css('background-size','contain');
                 $(".son1").css('background-repeat','no-repeat');
             }
-        })
+        })*/
     });
     var datas=[],names=["temperature","illumination","speed","rainfall","direction","isRain","mq135","digitalHumidity","current", "voltage","liquidLevel","WIFI"];
     var cname=['温度传感器(℃)','光照传感器(lux)','风速传感器(m/s)',
@@ -149,7 +149,7 @@
                 load: function () {
                     // set up the updating of the chart each second
                     var series = this.series[0];
-                    setInterval(function () {
+                   /* setInterval(function () {
                         $.ajax({
                             url:"http://222.24.20.127:1233/ssm/sensorData_one?id="+number,
                             type: 'post',
@@ -164,7 +164,7 @@
                                 series.addPoint([x, y], true, true);
                             }
                         });
-                    }, 1000);
+                    }, 1000);*/
                 }
             }
         };
@@ -217,8 +217,8 @@
             enabled: false
         };
         var m,n;
-        for(var i=0;i<1;i++){
-            $.ajax({
+        for(var i=0;i<11;i++){
+           /* $.ajax({
                     url:"http://222.24.20.127:1233/ssm/sensorData_one?id="+number,
                     type: 'post',
                     dataType: "json",
@@ -230,11 +230,11 @@
                      n=res['data'];
                       // console.log(m);
                     }
-                });
+                });*/
 
 
             var title = {//text: 'Live random data'
-                text:m
+                text: names[i]+cname[i]
             };
             var series1= [{
                 name: 'Real-time data',
@@ -244,7 +244,7 @@
                     for (j = -6; j <= 0; j += 1) {//代表有多少个点
                         data.push({
                             x: time + j * 1000,
-                            y:(Math.random() * (1.1 - 1) + 1)*Math.floor(n)
+                            y:(Math.random() * (1.1 - 1) + 1)*20
                         });
                     }
                     return data;
@@ -252,7 +252,7 @@
             }];
             var json = {};
             json.chart = chart;
-            json.title =title;
+            json.title = title;
             json.tooltip = tooltip;
             json.xAxis = xAxis;
             json.yAxis = yAxis;

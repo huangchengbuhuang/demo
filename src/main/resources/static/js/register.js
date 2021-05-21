@@ -78,17 +78,15 @@ $().ready(function() {
         var mail =  /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-]{2,5})+/ ;
         return this.optional(element) || (mail.test(value));
     }, "请填入正确的邮箱");
-
     $(".confirmButton").click(function () {
         if($validator.form()) {
             /*将数据传递给后台*/
-            var dataInfo = $("#registerForm").serializeArray();
-            //删除confirmPassword
-            delete values.confirmPassword;
-            console.log(values);
+            var values={"name":$("#username").val(),"phone":$("#phoneNumber").val(),"email":$("#email").val(),"Password":$("#confirmPassword").val()}
             //将数据发出去
-            $.post(ip+"/user/register", values,function(json){
+            $.post("/register", values,function(json){
                 console.log(json)
+/*                var dataInfo = $("#registerForm").serializeArray();*/
+
                 if(json.type === "COMMON_SUC"){
                     window.location.href = "login1.html";
                 }else if(json.type === "USER_REGISTER_REQ_ERROR"){

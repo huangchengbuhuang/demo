@@ -1,4 +1,4 @@
-package com.graduate.design.graduatedesign.controller.Service;
+package com.graduate.design.graduatedesign.Service;
 
 import com.graduate.design.graduatedesign.pojo.User;
 import org.springframework.stereotype.Service;

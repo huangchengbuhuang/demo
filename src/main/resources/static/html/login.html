@@ -40,7 +40,7 @@
 
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/jquery.validate.min.js"></script>
-<script src="../common.js"></script>
+<!--<script src="../common.js"></script>-->
 <script src="../js/homePage2.js" type="text/javascript" charset="utf-8"></script>
 <!--利用JQuery validate进行表单验证-->
 <script>
@@ -69,42 +69,23 @@
                 error.appendTo(element.parent().next());
             }
         });
-
         $(".confirmButton").click(function () {
             if ($validator.form()) {
-                var dataInfo = $("#loginForm").serialize();
-                console.log(dataInfo);
-                var page = "http://222.24.20.127:1233/ssm/loginForm"+"?"+dataInfo;
-                /* var userId;
-                 var values = {};
-                 $.each(dataInfo, function (i, val) {
-                     values[val.name] = val.value;
-                 });
-                 var jsonData=JSON.stringify(values)
-                 console.log(jsonData);*/
-                $.ajax({
-                    type: "post",
-                    url: page,
-                    data: {},
-                    dataType: "json",
-                    headers: {
-                        "Content-Type":
-                            "application/json; charset=utf-8"
-                    },
-                    success:function (data) {
-                        console.log(data);
-                        if(data.check){
-                            alert("登录成功!点击确定返回首页体验全部功能");
-                            userId=data.check;
-                            window.open("homePages.html");
-                        }
-                        else{
-                            alert("账户名或密码错误，请检查后重新登录，或点击忘记密码");
-                            window.open("login.html");
-                        }},
-                    error:function () {
-                        alert("登陆失败")
+                var params={"name":$("#name").val(),"Password":$("#password").val()};
+                console.log(params);
+                $.post("/login", params,function(data){
+                    console.log(data)
+                    if(data.toString()=='ok'){
+                        alert("登录成功!点击确定返回首页体验全部功能");
+                        userId=data.check;
+                        window.open("homePages.html");
                     }
+                    else{
+                        alert("账户名或密码错误，请检查后重新登录，或点击忘记密码");
+                        window.open("login.html");
+                    }
+                }).fail(function(data){
+                    alert("登陆失败");
                 });
             }
         })

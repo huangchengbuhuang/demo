@@ -53,7 +53,7 @@
         <!--</div>-->
 
         <div class="logined">
-            <a class="developerBtn" href="equipmentList.html">我的设备</a>
+            <a class="developerBtn" href="devicemanage.html">我的设备</a>
             <a class="developerBtn" href="userManage.html">开发者中心</a>
             <a class="icon-bell bell" href="newMessage.html"></a>
             <a class="icon-user user" href="userDocument.html"></a>
@@ -91,9 +91,9 @@
         <a href="javascript: return false;">地址：陕西省西安市长安区西安邮电大学信工实验室</a>
     </div>
 </footer>
-<script src="../common.js"></script>
+<!--<script src="../common.js"></script>-->
 <script>
-    var userId = getCookie("userId");
+    var userId = true;               /*getCookie("userId");*/
     if(userId){
         $('.logined').css('display','inline-block');
         $('.unlogin').css('display','none');
@@ -112,23 +112,27 @@
                 zoom: 4 //地图显示的缩放级别
             })
         });
+        //导航条
         mapObj.plugin(["AMap.ToolBar"], function () {
             var toolBar = new AMap.ToolBar();
             mapObj.addControl(toolBar);
         });
         //请求所有数据，展示每个设备
-        $.post(ip+"/equipment/findLocation",function(json){
-            $.each(json.data, function (i, item) {
-                var ss = '设备名称：<span style="font-size:14px;text-decoration:underline;" >' + item.name + '</span>';
-                lng = item.location_X;
-                lat = item.location_Y;
-                addPoint(lng,lat, ss,item.equipmentId);
-            });
+        $.post("/map",function(json){
+
+            for (var i=0;i<json.length;i++){
+                var ss = '设备名称：<span style="font-size:14px;text-decoration:underline;" >' + json[i].name+ '</span>';
+                lng = json[i].location_X;
+                lat = json[i].location_Y;
+                addPoint(lng,lat, ss,json[i].equipmentId);
+            }
+
             //当出现两个以上位置很相近的，采用聚集点标记
             mapObj.plugin(["AMap.MarkerClusterer"], function () {
                 cluster = new AMap.MarkerClusterer(mapObj, markers);
                 cluster.setGridSize(20);
             });
+
         });
     });
     //展示窗口信息

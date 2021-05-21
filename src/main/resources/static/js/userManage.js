@@ -4,7 +4,9 @@ var canvas;
 var base64;//将canvas压缩为base64格式
 var mapObj, cluster;
 var markers = [];
-var userId = '4657c0733c5048a79e7555574a1dc564';
+/*var userId = '4657c0733c5048a79e7555574a1dc564';*/
+var userId=65;
+
 
 if(userId){
     $('.logined').css('display','inline-block');
@@ -56,7 +58,7 @@ $(document).ready(function(){
     });
 
     var params = {};
-    params.userId = userId;
+    params.userId = 65;
     params.pageNo = 1 || pageIndex;
     //显示devices列表
    /* $.post(ip+'/equipment/find',params,function(json){
@@ -139,8 +141,10 @@ $(document).ready(function(){
         }
     });
 
+
+
     //地理位置
-    map = new AMap.Map('mapDiv', {
+   /* map = new AMap.Map('mapDiv', {
         resizeEnable: true,
         center: new AMap.LngLat(116.306206, 39.975468),
         zoom:10
@@ -159,6 +163,7 @@ $(document).ready(function(){
         select.value = subDistricts[0].name;
         select.onchange();
     });
+    //导航条对视野做出变化
     map.plugin(["AMap.ToolBar"], function () {
         var toolBar = new AMap.ToolBar();
         map.addControl(toolBar);
@@ -176,7 +181,7 @@ $(document).ready(function(){
         var lng =e.lnglat.getLng();
         var lat =e.lnglat.getLat();
         addPoint(lng,lat);
-    });
+    });*/
 
     mapObj = new AMap.Map("mapShow", {
         //二维地图显示视口
@@ -192,7 +197,7 @@ $(document).ready(function(){
     //请求所有数据，展示每个设备
     var params1 = {};
     params1.userId = userId;
-    /*$.post(ip+"/equipment/findLocationUserId",params1,function(json){
+    $.post(ip+"/equipment/findLocationUserId",params1,function(json){
         $.each(json.data, function (i, item) {
             var ss = '<span style="font-size: 16px;">设备名称：</span>'
                 +'<span style="font-size:14px;text-decoration:underline;" >'
@@ -208,8 +213,11 @@ $(document).ready(function(){
             cluster = new AMap.MarkerClusterer(mapObj, markers);
             cluster.setGridSize(60);
         });
-    });*/
+    });
 });
+
+
+
 
 //删除设备
 function deleteDevice(id,name,obj){
@@ -221,7 +229,7 @@ function deleteDevice(id,name,obj){
         tbody.removeChild(tr);
 
         var params = {"equipmentId":id};
-        /*$.post(ip+"/equipment/del",params,function(json){
+        $.post(ip+"/equipment/del",params,function(json){
             if(json.typpe === "COMMPN_SUC"){
                 var url=window.location.href;
                 window.location.href = url;
@@ -231,10 +239,11 @@ function deleteDevice(id,name,obj){
         }).fail(function(){
             alert("请求错误，请稍后再试");
         });
-    }*/
+    }
 }
 //编辑设备
 function editDevice(id,obj){
+
     //将数据填人编辑设备中
     $.post(ip+'/equipment/find',{equipmentId:id},function(json){
         var data = json.data.equipments[0];
@@ -467,36 +476,7 @@ function updateDevice(id){
     }
 }
 //保存新添加的设备信息
-function saveDevice(){
-    alert("保存成功");
-    window.open("userManage.html")
-   /* if($("#Name").val()){
-        var params = $("#form1").serializeArray();
-        console.log(params);
-        var values={};
-        $.each(params,function(i,val){
-            values[val.name] = val.value;
-        });
-        values.imgUrl = "";
-        values.userId = userId;
-        console.log(values);
-        $.post(ip+'/equipment/add',values,function(json){
-            console.log(json);
-            if(json.type === "COMMON_SUC"){
-                var url=window.location.href;
-                window.location.href = url;
-            }
 
-        }).fail(function(){
-            alert("请求错误，请稍后再试")
-        });
-    }else{
-        alert("请填写必要信息")
-    }
-
-*/
-
-}
 //取消正在添加的设备信息
 function cancelAddDevice(){
     document.getElementById('form1').reset();
@@ -504,14 +484,17 @@ function cancelAddDevice(){
     window.location.href = Rurl;
 }
 
-//点添加到地图上
-function addPoint(lng,lat) {
+
+
+
+//点添加到地图上//解决地图问题
+/*function addPoint(lng,lat) {
     var point =  new AMap.LngLat(lng, lat);  // 创建标注
     marker.setPosition(point);            // 将标注添加到地图中
     //$("#location").val(lng + "," + lat);
     $("#location_X").val(lng);
     $("#location_Y").val(lat);
-}
+}*/
 function addPointEdit(lng,lat) {
     var point =  new AMap.LngLat(lng, lat);  // 创建标注
     marker.setPosition(point);            // 将标注添加到地图中
@@ -567,6 +550,27 @@ function thisLocation(location){
     });
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function selectImg(file){
     if(!file.files || !file.files[0]){
         return;
@@ -631,4 +635,4 @@ function addPoint1(lng, lat, content, typeIcon,gid) {
     });
     marker1.setMap(mapObj);
     markers.push(marker1);
-}}
+}

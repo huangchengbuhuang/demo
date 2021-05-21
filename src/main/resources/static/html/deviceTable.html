@@ -4,12 +4,12 @@
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../bootstrap-table/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../fonts/bootstrap-table/bootstrap-table.css">
 
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="../bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="../fonts/bootstrap-table/bootstrap-table.min.js"></script>
     <script type="text/javascript" src="../js/bootstrap-table-zh-CN.min.js"></script>
     <style type="text/css">
         .page_tile {
@@ -43,9 +43,9 @@
     $table.bootstrapTable({ // 对应table标签的id
         data: "",
         sidePagination: 'server', // 设置为服务器端分页
-        url: " http://222.24.20.127:1233/ssm/sensor ", // 获取表格数据的url
+        url: "/sensor", // 获取表格数据的url
         method: 'post',
-        contentType: "application/json", //一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8", //一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
 
         cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
         striped: true, //表格显示条纹，默认为false
@@ -81,12 +81,18 @@
             align: 'center',
             valign: 'middle'
         }, {
+            field: 'date',
+            title: '时间',
+            align: 'center',
+            valign: 'middle'
+        }, {
             field: 'id',
             title: '更多操作',
             value:"查看更多",
             align: 'center',
             valign: 'middle',
             formatter:function(result){
+
                 var oUrl=result;
                 console.log(oUrl);
                 return "<" + "a href=ViewMore.html?id="+oUrl+" id ="+oUrl+">查看更多</a>"
@@ -94,29 +100,33 @@
         }
 
         ],
+
         onLoadSuccess: function(data) { //加载成功时执行
+
             console.info("加载成功");
         },
         onLoadError: function(data) { //加载失败时执行
+
             console.log(data);
             console.info("加载数据失败");
         }
     });
 
+
     //请求成功方法
     function responseHandler(result) {
+
+        console.log(result);
         return {
+
             // total : result.dataLength, //总页数,前面的key必须为"total"
             total: result.total, //总页数,前面的key必须为"total"
-            rows: result.rowDatas //行数据，前面的key要与之前设置的dataField的值一致.
+            rows: result.data//行数据，前面的key要与之前设置的dataField的值一致.
         }
     }
     function refresh(url) {
         $('#table').bootstrapTable('refresh');
     }
-
-
-
 </script>
 </body>
 

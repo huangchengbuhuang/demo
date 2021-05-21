@@ -43,8 +43,10 @@
     }
     AMap.plugin(["AMap.Geolocation"], function() {
         var geolocation = new AMap.Geolocation(options);
+        alert("此处已经执行");
+        console.log(geolocation+"111");
         map.addControl(geolocation);
-        geolocation.getCurrentPosition()
+        geolocation.getCurrentPosition();
     });
 </script>
 </body>
