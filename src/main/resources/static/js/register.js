@@ -1,10 +1,10 @@
 $().ready(function() {
     //获取焦点和失去焦点时样式的改变
     $(".info").focusin(function () {
-           $(this).parent().addClass("focus");
-       }).focusout(function () {
-           $(this).parent().removeClass("focus");
-       });
+        $(this).parent().addClass("focus");
+    }).focusout(function () {
+        $(this).parent().removeClass("focus");
+    });
 
     //页面加载完毕，让首个输入框获取焦点
     $("#username").focus();
@@ -68,6 +68,7 @@ $().ready(function() {
             error.appendTo(element.parent().next());
         }
     });
+    alert("次");
 
     jQuery.validator.addMethod("isMobile", function(value, element) {
         var length = value.length;
@@ -78,6 +79,7 @@ $().ready(function() {
         var mail =  /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-]{2,5})+/ ;
         return this.optional(element) || (mail.test(value));
     }, "请填入正确的邮箱");
+    alert("此处已经执行");
     $(".confirmButton").click(function () {
         if($validator.form()) {
             /*将数据传递给后台*/
@@ -85,10 +87,10 @@ $().ready(function() {
             //将数据发出去
             $.post("/register", values,function(json){
                 console.log(json)
-/*                var dataInfo = $("#registerForm").serializeArray();*/
+                /*                var dataInfo = $("#registerForm").serializeArray();*/
 
-                if(json.type === "COMMON_SUC"){
-                    window.location.href = "login1.html";
+                if(json.toString()=='ok') {
+                    window.location.href = "login.html";
                 }else if(json.type === "USER_REGISTER_REQ_ERROR"){
                     alert("注册参数请求错误");
                 }else if(json.type === "USER_NAME_EXIT"){
