@@ -21,7 +21,6 @@ import java.util.List;
  */
 
 @Controller
-
 public class EquipmentController {
     @Autowired
    private EquipmentService equipmentService;
@@ -42,7 +41,6 @@ public class EquipmentController {
 
         return equipmentlist;
     }
-
     @RequestMapping("/Equipment/del")
     @ResponseBody
     /*获取设备的id然后将设备进行删除*/
