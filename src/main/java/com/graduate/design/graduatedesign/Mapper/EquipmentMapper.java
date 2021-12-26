@@ -10,7 +10,7 @@ import java.util.List;
  * @title: EquipmentMapper
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2712:04
+ * @date 2021/10/2712:04
  */
 @Mapper
 public interface EquipmentMapper {

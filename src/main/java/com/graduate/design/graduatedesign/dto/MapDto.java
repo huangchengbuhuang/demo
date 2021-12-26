@@ -5,7 +5,7 @@ package com.graduate.design.graduatedesign.dto;
  * @title: MapDto
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2923:09
+ * @date 2021/10/2923:09
  */
 public class MapDto {
     private String name;

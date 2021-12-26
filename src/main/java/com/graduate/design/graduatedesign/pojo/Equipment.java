@@ -5,7 +5,7 @@ package com.graduate.design.graduatedesign.pojo;
  * @title: Equipment
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2712:04
+ * @date 2021/10/2712:04
  */
 public class Equipment {
     private int equ_id;

@@ -7,7 +7,7 @@ import java.util.Date;
  * @title: SensorDto
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2816:29
+ * @date 2021/10/2816:29
  */
 public class SensorDto {
     private String name;

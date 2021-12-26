@@ -5,7 +5,7 @@ package com.graduate.design.graduatedesign.pojo;
  * @title: Sensor
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2618:52
+ * @date 2021/10/2618:52
  */
 public class Sensor {
     private int senser_id;

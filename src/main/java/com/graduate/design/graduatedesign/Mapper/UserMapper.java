@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
  * @title: UserMapper
  * @projectName graduatedesign
  * @description: TODO
- * @date 2021/4/2519:19
+ * @date 2021/10/2519:19
  */
 @Mapper
 public interface UserMapper {
